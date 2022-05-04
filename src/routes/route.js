@@ -6,13 +6,11 @@ const internController = require("../controllers/internController")
 
 
 
-router.post("/createAuthor", collegeController.createCollege)
+router.post('/create',internController.createInternData)
 
-router.post("/createBlog", internController.createInternData)
+router.post("/college",collegeController.createCollege)
 
-
-
-router.get("/blogs", collegeController.collegeDetails)
+router.get("/data",collegeController.collegeDetails)
 
 
 

@@ -43,7 +43,7 @@ const collegeDetails = async function (req, res) {
 
         let collegeDetail = await collegeModel.findOne({ name: Name, isDeleted: false })
 
-        if (!collegeDetail.length) { res.status(404).send({ status: false, msg: "collegeDetail not found" }) }
+        if (collegeDetail==null) { res.status(404).send({ status: false, msg: "collegeDetail not found" }) }
 
         let id = collegeDetail._id.toString()
         let check2 = await internModel.find({ collegeId: id })
