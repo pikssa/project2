@@ -18,15 +18,16 @@ const createCollege = async function (req, res) {
         if (!college.logoLink) { return res.status(400).send({ status: false, message: "logoLink is required" }) }
 
         if (!valid(college.name)) { return res.status(400).send({ status: false, message: "name is invalid" }) }
+        let validName = await collegeModel.findOne({ name: college.name })
 
+        if (validName) {
+            return res.status(409).send({ status: false, msg: `${college.name} College Name Already Exists` });
+        }
 
         if (!valid(college.fullName)) { return res.status(400).send({ status: false, message: "fullName is not valid" }) }
 
-        let check1 = /^(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-/]))$/
-        if (!check1.test(college.logoLink)) { return res.status(400).send({ status: false, message: "logoLink must is not valid " }) }
-
-        else {
-            let collegeCreated = await collegeModel.create(author)
+               else {
+            let collegeCreated = await collegeModel.create(college)
             res.status(201).send({ status: true, data: collegeCreated })
         }
     } catch (err) { return res.status(500).send({ status: false, msg: err.message }) }
@@ -37,26 +38,27 @@ const createCollege = async function (req, res) {
 const collegeDetails = async function (req, res) {
 
     try {
-        let Name = req.query.name
-        if (!Name) { return res.status(400).send({ status: false, message: "Name is required" }) }
+        let Name = req.query
+       
+       
 
+        let collegeDetail = await collegeModel.findOne({name:Name.name, isDeleted: false })
 
-        let collegeDetail = await collegeModel.findOne({ name: Name, isDeleted: false })
+        if (collegeDetail == null) { res.status(404).send({ status: false, msg: "collegeDetail not found" }) }
 
-        if (collegeDetail==null) { res.status(404).send({ status: false, msg: "collegeDetail not found" }) }
+         let id = collegeDetail._id
 
-        let id = collegeDetail._id.toString()
-        let check2 = await internModel.find({ collegeId: id })
+         let StudentData = await internModel.find({ collegeId: id })
 
         let obj = {
             "name": collegeDetail.name,
             "fullName": collegeDetail.fullName,
             "logoLink": collegeDetail.logoLink,
-            "interests": check2
+            "interests": (StudentData.length != 0) ? StudentData : "No One Student"
         }
 
 
-        res.status(200).send({ status: true, data: obj })
+        res.status(200).send({ status: true, data:obj })
 
     } catch (err) { return res.status(500).send({ status: false, msg: err.message }) }
 
