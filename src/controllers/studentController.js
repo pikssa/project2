@@ -25,23 +25,23 @@ let createStudent = async function (req, res) {
     let { name, email, collegeId, mobile, isDeleted } = req.body
 
     if (!isvalid(name)) {
-      return res.send({ status: false, msg: "Name is required" })
+      return res.status(400).send({ status: false, msg: "Name is required" })
 
     } if (!isvalid(email)) {
-      return res.send({ status: false, msg: "Email is required" })
+      return res.status(400).send({ status: false, msg: "Email is required" })
     }
 
     if (!isvalid(collegeId)) {
-      return res.send({ status: false, msg: "Email is required" })
+      return res.status(400).send({ status: false, msg: "Email is required" })
     }
 
     if (!isvalid(mobile)) {
-      return res.send({ status: false, msg: "Mobile Number is required" })
+      return res.status(400).send({ status: false, msg: "Mobile Number is required" })
     }
 
 
     if (mobile.length != 10 || mobile[0] == "0") {
-      return res.send({ status: false, msg: "Enter the Valid Number" })
+      return res.status(400).send({ status: false, msg: "Enter the Valid Number" })
     }
 
 
@@ -53,21 +53,21 @@ let createStudent = async function (req, res) {
 
     let validEmail = await studentModel.findOne({ email });
     if (validEmail) {
-      return res.status(400).send({ status: false, msg: "Email Alrady Exist" });
+      return res.status(409).send({ status: false, msg: "Email Alrady Exist" });
     }
 
 
 
     let validNumber = await studentModel.findOne({ mobile: mobile });
     if (validNumber) {
-      return res.status(400).send({ status: false, msg: "Mobile Number Alrady Exist" });
+      return res.status(409).send({ status: false, msg: "Mobile Number Alrady Exist" });
     }
 
 
     let validCollege = await collegeModel.findById(collegeId)
 
     if (!validCollege) {
-      return res.status(409).send({ status: false, msg: "College Does Not Exists" })
+      return res.status(404).send({ status: false, msg: "College Does Not Exists" })
     }
 
     let StudentData = await studentModel.create(req.body)
@@ -83,10 +83,14 @@ let createStudent = async function (req, res) {
 let collegeDetails = async function (req, res) {
   try {
     let collegeName = req.query.name;
+     if(!collegeName){
+      return res.status(400).send({ status: false, msg: "Enter College Name" })
+     }
+
     let collegeFind = await collegeModel.findOne({ name: collegeName })
 
     if (!collegeFind) {
-      return res.status(404).send({ status: false, msg: "College Name is invalid" })
+      return res.status(400).send({ status: false, msg: "College Name is invalid" })
     }
 
     if (collegeFind.isDeleted == true) {

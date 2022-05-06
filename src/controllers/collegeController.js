@@ -17,26 +17,26 @@ let createrCollege= async function(req,res){
     try{
         let requiredBody=req.body;
         if(!isvalidRequestBody(requiredBody)){
-          return res.send({status :false, msg:"please provide College details"})
+          return res.status(400).send({status :false, msg:"please provide College details"})
         }
         
    let {name,fullName,logoLink,isDeleted,}=req.body
 
    if(!isvalid(name)){
-    return res.send({status : false , msg :"Name is required"})
+    return res.status(400).send({status : false , msg :"Name is required"})
   }
   if(!isvalid(fullName)){
-    return res.send({status : false , msg :"FullName is required"})
+    return res.status(400).send({status : false , msg :"FullName is required"})
   }
 
   if(!isvalid(logoLink)){
-    return res.send({status : false , msg :"Logo Link is required"})
+    return res.status(400).send({status : false , msg :"Logo Link is required"})
   }
  
   let validName=await collegeModel.findOne({name})
 
   if(validName){
-    return res.send({ status: false, msg: `${name} College Name Already Exists` });
+    return res.status(409).send({ status: false, msg: `${name} College Name Already Exists` });
   }
   
 
