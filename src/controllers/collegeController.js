@@ -20,7 +20,8 @@ let createrCollege= async function(req,res){
           return res.status(400).send({status :false, msg:"please provide College details"})
         }
         
-   let {name,fullName,logoLink,isDeleted,}=req.body
+   let {name,fullName,logoLink,isDeleted}=req.body
+   if(isDeleted==true){ return res.status(400).send({status : false , msg :"data is not vailid"})}
 
    if(!isvalid(name)){
     return res.status(400).send({status : false , msg :"Name is required"})
