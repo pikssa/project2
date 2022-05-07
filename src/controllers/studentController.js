@@ -18,7 +18,7 @@ let createStudent = async function (req, res) {
   try {
 
     let requiredBody = req.body;
-    if(isDeleted==true){ return res.status(400).send({status : false , msg :"data is not vailid"})}
+    //if(isDeleted==true){ return res.status(400).send({status : false , msg :"data is not vailid"})}
     if (!isvalidRequestBody(requiredBody)) {
       return res.send({ status: false, msg: "please provide  details" })
     }
@@ -42,7 +42,7 @@ let createStudent = async function (req, res) {
 
 
     if (mobile.length != 10 || mobile[0] == "0") {
-      return res.status(400).send({ status: false, msg: "Enter the Valid Number" })
+      return res.status(400).send({ status: false, msg: "Enter the Valid Number" }) 
     }
 
 
@@ -85,7 +85,7 @@ StudentData.save()
 
 let collegeDetails = async function (req, res) {
   try {
-    let collegeName = req.query.name;
+    let collegeName = req.query.collegeName;
      if(!collegeName){
       return res.status(400).send({ status: false, msg: "Enter College Name" })
      }

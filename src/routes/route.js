@@ -17,3 +17,6 @@ router.get("/collegeDetails", StudentController.collegeDetails)
 
 
 module.exports = router;
+
+
+
